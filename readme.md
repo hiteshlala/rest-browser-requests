@@ -8,7 +8,7 @@ The server is built to serve this page and is not RESTful.  You would need a DB 
 
 The requests are written using XMLHttpRequest a technology supported natively by all browsers.  The methods are included in a script tag in the html.
 
-A simple explanationo of REST and the main methods [here](https://spring.io/understanding/REST).
+A simple explanation of REST and the main methods [here](https://spring.io/understanding/REST).
 
 
 ## Setup
@@ -19,7 +19,7 @@ A simple explanationo of REST and the main methods [here](https://spring.io/unde
 ## Run
 
     npm start
-    
+
 Navigate to http://localhost:5432
 
 
