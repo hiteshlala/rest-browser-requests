@@ -1,0 +1,16 @@
+{
+  "name": "rest-browser-requests",
+  "version": "1.0.0",
+  "description": "get put post patch delete from browser using XMLHttpRequest",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Hitesh Lala",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.5.2",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0"
+  }
+}

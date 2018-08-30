@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    button {
+      min-width: 100px;
+      background-color: bisque;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h3> GET POST PUT PATCH DELETE Request Test Page </h3>
+    <p> A simple explanation of these resources <a href="https://spring.io/understanding/REST">here</a>.</p>
+    <hr>
+  </div>
+  <div>
+    <button onclick="get()"> GET </button>  Get a resource.
+    <hr>
+    <button onclick="post()"> POST </button>  Create a new resource.
+    <p> name: <input type="text" id="post-name"> job: <input type="text" id="post-job"></p>
+    <hr>
+    <button onclick="patch()"> PATCH </button> Update part or all of an existing resource.
+    <p>record ID to change: <input type="number" id="patch-id"></p>
+    <p> name: <input type="text" id="patch-name"> job: <input type="text" id="patch-job"></p>
+    <hr>
+    <button onclick="put()"> PUT </button> Update an entire resource, missing fields get nullified. Or create a new resource.
+    <p>record ID to change: <input type="number" id="put-id"></p>
+    <p> name: <input type="text" id="put-name"> job: <input type="text" id="put-job"></p>
+    <hr>
+    <button onclick="del()"> DELETE </button> Delete a resource
+    <p>record ID to delete: <input type="number" id="del-id"></p>
+    <hr>
+  </div>
+  <div> <p>Message: <span id="message"></span> </p></div>
+  <hr>
+  <div><p>Resources:</p></div>
+  <div id="data"></div>
+  <script>
+    let dataArray = [];
+    const serverurl = 'http://localhost:5432';
+    function populate( data ) {
+      dataArray = data;
+      clear();
+      let e = document.getElementById( 'data' );
+      let t = document.createElement( 'table' );
+      let lines = '<tr><td> ID </td><td> Name </td><td> Job </td></tr>';
+      for( let i = 0; i < data.length; i++ ) {
+        lines += `<tr><td> ${i} </td><td> ${data[i].name} </td><td> ${data[i].job} </td></tr>`
+      }
+      t.innerHTML = lines;
+      e.appendChild( t );
+    }
+
+    window.onload = () => populate( '___DATA___' );
+
+    function getRequest( url ) {
+      return new Promise(( resolve, reject ) => {
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open( 'GET', url, true );
+        req.onload = r => {
+          if( r.target.status >= 400 ) {
+            reject( new Error( `${r.target.status} - ${r.target.response}` ) );
+          }
+          resolve( req.response );
+        }
+        req.onerror = e => {
+          reject( e );
+        }
+        req.send();
+      });
+    }
+
+    function postRequest( url, data ) {
+      let send = JSON.stringify( data );
+      return new Promise(( resolve, reject ) => {
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open( 'POST', url, true );
+        req.setRequestHeader( 'Content-Type', 'application/json;charset=UTF-8' );
+        req.setRequestHeader( 'Accept', 'application/json' );
+        req.onload = r => {
+          if( r.target.status >= 400 ) {
+            reject( new Error( `${r.target.status} - ${r.target.response}` ) );
+          }
+          resolve( req.response );
+        }
+        req.onerror = e => {
+          reject( e );
+        }
+        req.send( send );
+      });
+    }
+
+    function patchRequest( url, data ) {
+      let send = JSON.stringify( data );
+      return new Promise(( resolve, reject ) => {
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open( 'PATCH', url, true );
+        req.setRequestHeader( 'Content-Type', 'application/json;charset=UTF-8' );
+        req.setRequestHeader( 'Accept', 'application/json' );
+        req.onload = r => {
+          if( r.target.status >= 400 ) {
+            reject( new Error( `${r.target.status} - ${r.target.response}` ) );
+          }
+          resolve( req.response );
+        }
+        req.onerror = e => {
+          reject( e );
+        }
+        req.send( send );
+      });
+    }
+
+    function putRequest( url, data ) {
+      let send = JSON.stringify( data );
+      return new Promise(( resolve, reject ) => {
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open( 'PUT', url, true );
+        req.setRequestHeader( 'Content-Type', 'application/json;charset=UTF-8' );
+        req.setRequestHeader( 'Accept', 'application/json' );
+        req.onload = r => {
+          if( r.target.status >= 400 ) {
+            reject( new Error( `${r.target.status} - ${r.target.response}` ) );
+          }
+          resolve( req.response );
+        }
+        req.onerror = e => {
+          reject( e );
+        }
+        req.send( send );
+      });
+    }
+
+    function deleteRequest( url, data ) {
+      let send = JSON.stringify( data );
+      return new Promise(( resolve, reject ) => {
+        let req = new XMLHttpRequest();
+        req.responseType = 'json';
+        req.open( 'DELETE', url, true );
+        req.setRequestHeader( 'Content-Type', 'application/json;charset=UTF-8' );
+        req.setRequestHeader( 'Accept', 'application/json' );
+        req.onload = r => {
+          if( r.target.status >= 400 ) {
+            reject( new Error( `${r.target.status} - ${r.target.response}` ) );
+          }
+          resolve( req.response );
+        }
+        req.onerror = e => {
+          reject( e );
+        }
+        req.send( send );
+      });
+    }
+
+    function get() {
+      getRequest( serverurl )
+      .then( r => {
+        populate( r );
+        msg( 'GET was clicked' );
+      })
+      .catch( e => {
+        msg( `GET was clicked error: ${e.message}` );
+      })
+
+    }
+
+    function post() {
+      const n = document.getElementById( 'post-name' ).value;
+      const j = document.getElementById( 'post-job' ).value;
+      if ( n.length === 0 || j.length === 0 ) {
+        msg( 'POST requires both name and job field filled' );
+      }
+      else {
+        postRequest( serverurl, { name: n, job: j } )
+        .then( d => {
+          populate( d );
+          msg( `POST name:${n}, job:${j}`)
+        }) 
+        .catch( e => {
+          msg( `POST name:${n}, job:${j}, Error: ${e.message}`);
+        })
+      }
+    }
+
+    function patch() {
+      const id = document.getElementById( 'patch-id' ).value; // is a string
+      const n = document.getElementById( 'patch-name' ).value;
+      const j = document.getElementById( 'patch-job' ).value;
+      if ( !id || ( parseInt(id) >= dataArray.length ) || ( n.length === 0 && j.length === 0 ) ) {
+        msg( 'PATCH requires an ID and either name or job field filled' );
+      }
+      else {
+        let data = { id: id };
+        if ( n ) data.name = n;
+        if ( j ) data.job = j;
+        patchRequest( serverurl, data )
+        .then( d => {
+          populate( d );
+          msg( `PATCH id: ${id}, name:${n}, job:${j}`)
+        }) 
+        .catch( e => {
+          msg( `PATCH id: ${id}, name:${n}, job:${j}, Error: ${e.message}`);
+        });
+      }
+    }
+
+    function put() {
+      const id = document.getElementById( 'put-id' ).value; // is a string
+      const n = document.getElementById( 'put-name' ).value;
+      const j = document.getElementById( 'put-job' ).value;
+      if ( !id ) {
+        msg( 'PUT requires an ID' );
+      }
+      else {
+        let data = { 
+          id: id,
+          name: n || '',
+          job: j || ''
+        };
+        putRequest( serverurl, data )
+        .then( d => {
+          populate( d );
+          if ( parseInt(id) >= dataArray.length ) msg( `PUT New Record name:${n}, job:${j}`)
+          else msg( `PUT id: ${id}, name:${n}, job:${j}`)
+        }) 
+        .catch( e => {
+          msg( `PUT id: ${id}, name:${n}, job:${j}, Error: ${e.message}`);
+        });
+      }
+    }
+
+    function del() {
+      const id = document.getElementById( 'del-id' ).value;
+      if( !id  ) {
+        msg( 'DELETE requires a record ID' );
+      }
+      else {
+        deleteRequest( serverurl, { id: id })
+        .then( d => {
+          populate( d );
+          msg( `DELETE id: ${id}` )
+        }) 
+        .catch( e => {
+          msg( `DELETE id: ${id}, Error: ${e.message}`);
+        });
+      }
+    }
+
+    function msg( message ) {
+      console.log( message );
+      const e = document.getElementById( 'message' );
+      e.innerText = message;
+      setTimeout(()=>{
+        e.innerText = '';
+      }, 5000);
+    }
+
+    function clear() {
+      const ids = [
+        'post-name', 'post-job',
+        'patch-id', 'patch-name', 'patch-job',
+        'put-id', 'put-name', 'put-job',
+        'del-id'
+      ];
+      ids.forEach( id => {
+        const a = document.getElementById( id );
+        a.value = '';
+      });
+
+      document.getElementById( 'data' ).innerText = '';
+    }
+  </script>
+  
+</body>
+</html>
