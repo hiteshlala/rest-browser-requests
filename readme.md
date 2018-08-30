@@ -10,14 +10,16 @@ The requests are written using XMLHttpRequest a technology supported natively by
 
 A simple explanationo of REST and the main methods [here](https://spring.io/understanding/REST).
 
+
 ## Setup
 
-    ``` npm install ```
+    npm install
+
 
 ## Run
 
-    ``` npm start ```
-
-  Navigate to http://localhost:5432
+    npm start
+    
+Navigate to http://localhost:5432
 
 
